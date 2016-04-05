@@ -16,11 +16,22 @@
     <div class="aa">
         <input type="text">
     </div>
+    <div class="aa">
+        <input type="text">
+    </div>
+    <div id="b"></div>
 </div>
 <script>
 
-    console.log(i('#a').attr('id', 'bb', 'cc'));
-    console.log(i('#bb .aa'));
+    /*console.log(i('#a').attr('id', 'bb', 'cc'));
+    console.log(i('#bb .aa'));*/
+    /*i('.da').on('click', function() {
+        console.log('da');
+    });*/
+    i('.aa').on('click', function() {
+        console.log('aa');
+    })
+    i('#b').html('<div class="da">aaaaaaaaa</div>');
 
 </script>
 
