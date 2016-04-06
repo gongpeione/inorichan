@@ -40,20 +40,27 @@
 
         init : function(value) {
 
-            var valueArray = value.split(' ');
-            if(valueArray.length === 1 && value.indexOf('#') >= 0) {
-                this.selector = document.getElementById(valueArray[0].replace('#', ''));
+            if(value.nodeType) {
+                this.selector = value;
 
                 return this;
             }
 
-            this.selectorVal = value;
-            this.selector    = document.querySelectorAll(value.trim());
-            //NodeList to Array
-            this.selector    = Array.prototype.slice.call(this.selector);
+            if(typeof value === 'string') {
+                var valueArray = value.split(' ');
+                if(valueArray.length === 1 && value.indexOf('#') >= 0) {
+                    this.selector = document.getElementById(valueArray[0].replace('#', ''));
 
-            return this;
+                    return this;
+                }
 
+                this.selectorVal = value;
+                this.selector    = document.querySelectorAll(value.trim());
+                //NodeList to Array
+                this.selector    = Array.prototype.slice.call(this.selector);
+
+                return this;
+            }
         },
 
         attr : function(name, value) {
