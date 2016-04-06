@@ -146,7 +146,20 @@
         },
 
         parent : function() {
-            //TODO
+            if(!Array.isArray(this.selector)) {
+                this.selector = this.selector.parentNode;
+
+                return this;
+            } else {
+                var parentList = [];
+                this.selector.forEach(function(item) {
+                    parentList.push(item);
+                });
+
+                this.selector = parentList;
+
+                return this;
+            }
         },
 
         text : function() {
@@ -154,6 +167,18 @@
         },
 
         remove : function() {
+            //TODO
+        },
+
+        height : function() {
+            //TODO
+        },
+
+        width : function() {
+            //TODO
+        },
+
+        offset : function() {
             //TODO
         },
 
