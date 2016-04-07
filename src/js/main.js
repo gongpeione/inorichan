@@ -1,16 +1,15 @@
 /**
  * Created by Gong on 2016/4/1.
  */
-
 (function(document, window, undefined) {
 
-    function i(value) {
-        return new i.prototype.init(value);
+    function G(value) {
+        return new G.prototype.init(value);
     }
 
-    i.prototype = {
+    G.prototype = {
 
-        constructor : i,
+        constructor : G,
         selector    : null,
         selectorVal : '',
         selectorPointer : 0,
@@ -47,6 +46,9 @@
             }
 
             if(typeof value === 'string') {
+
+                this.selectorVal = value;
+
                 var valueArray = value.split(' ');
                 if(valueArray.length === 1 && value.indexOf('#') >= 0) {
                     this.selector = document.getElementById(valueArray[0].replace('#', ''));
@@ -54,7 +56,6 @@
                     return this;
                 }
 
-                this.selectorVal = value;
                 this.selector    = document.querySelectorAll(value.trim());
                 //NodeList to Array
                 this.selector    = Array.prototype.slice.call(this.selector);
@@ -105,11 +106,11 @@
 
                     var event    = window.event || e,
                         i        = 0,
-                        nodeList = document.querySelectorAll(this.selectorVal);
+                        nodeList = document.querySelectorAll(self.selectorVal);
 
                     for(i in nodeList) {
                         if(nodeList[i] === event.target) {
-                            console.log(true);
+                            handler.call(nodeList[i]);
                         }
                     }
                 });
@@ -135,6 +136,48 @@
 
         rmClass : function(className) {
             //TODO
+        },
+
+        css : function(property, value) {
+
+            if(typeof property === 'string') {
+
+                if(arguments.length === 1) {
+                    if(!Array.isArray(this.selector)) {
+                        return window.getComputedStyle(this.selector, null)[property];
+                    } else {
+                        return window.getComputedStyle(this.selector[this.selectorPointer], null)[property];
+                    }
+                } else {
+                    if(!Array.isArray(this.selector)) {
+                        this.selector.style.cssText += ';' + property + ':' + value;
+                    } else {
+                        this.selector.forEach(function(item) {
+                            item.style.cssText += ';' + property + ':' + value;
+                        });
+                    }
+                }
+
+                return this;
+
+            } else if(typeof property === 'object') {
+
+                var cssText = '';
+
+                for(var key in property) {
+                    cssText += ';' + key + ':' + property[key];
+                }
+                if(!Array.isArray(this.selector)) {
+                    this.selector.style.cssText += cssText;
+                } else {
+                    this.selector.forEach(function(item) {
+                        item.style.cssText += cssText;
+                    });
+                }
+
+                return this;
+            }
+
         },
 
         append : function(value) {
@@ -212,13 +255,13 @@
 
     //Reset Function i's enumerable
     if(Object.defineProperty) {
-        Object.defineProperty(i, 'constructor', {
+        Object.defineProperty(G, 'constructor', {
             enumerable: false,
-            value: i
+            value: G
         });
     }
 
-    i.prototype.init.prototype = i.prototype;
-    window.i = i;
+    G.prototype.init.prototype = G.prototype;
+    window.G = G;
 
 })(document, window);
