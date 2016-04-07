@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<div id="a">
+<div id="a" data-aaa="aaabbb">
     <div class="aa">
         <input type="text">
     </div>
@@ -40,6 +40,8 @@
         'border'    : '10px solid #ccc'
     }));
 
+    G('.da').remove();
+    console.log(G('.aa').data('aaa', 'ddlskafjlaksdfj'));
 </script>
 
 </body>
