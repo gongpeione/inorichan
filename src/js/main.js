@@ -205,8 +205,23 @@
             }
         },
 
-        text : function() {
-            //TODO
+        text : function(value) {
+            if(!value) {
+
+                if(!Array.isArray(this.selector)) {
+                    return this.selector.innerText;
+                } else {
+                    return this.selector[this.selectorPointer].innerText;
+                }
+
+            } else {
+
+                if(!Array.isArray(this.selector)) {
+                    this.selector.innerText = value;
+                } else {
+                    this.selector[this.selectorPointer].innerText = value;
+                }
+            }
         },
 
         remove : function() {
