@@ -225,7 +225,13 @@
         },
 
         remove : function() {
-            //TODO
+            if(!Array.isArray(this.selector)) {
+                this.selector.parentNode.removeChild(this.selector);
+            } else {
+                this.selector.forEach(function(item) {
+                    item.parentNode.removeChild(item);
+                });
+            }
         },
 
         height : function() {
