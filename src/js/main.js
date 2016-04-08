@@ -13,6 +13,7 @@
         selector: null,
         selectorVal: '',
         selectorPointer: 0,
+        selectorIsArray : false,
 
         LOG_MESSAGE: {
             log: '[MESSAGE] ',
@@ -59,6 +60,7 @@
                 this.selector = document.querySelectorAll(value.trim());
                 //NodeList to Array
                 this.selector = Array.prototype.slice.call(this.selector);
+                this.selectorIsArray = true;
 
                 return this;
             }
@@ -68,11 +70,9 @@
 
             if (arguments.length > 1) {
 
-                if (!Array.isArray(this.selector)) {
-                    this.selector.setAttribute(name, value);
-                } else {
+                !this.selectorIsArray ?
+                    this.selector.setAttribute(name, value) :
                     this.selector[this.selectorPointer].setAttribute(name, value);
-                }
 
 
                 if (arguments.length > 2) {
@@ -130,18 +130,16 @@
 
             if (arguments.length === 1) {
 
-                return !Array.isArray(this.selector) ?
-                    this.selector.dataset[G.toCamel(key)] :
-                    this.selector[this.selectorPointer].dataset[G.toCamel(key)];
+                return !this.selectorIsArray ?
+                            this.selector.dataset[G.toCamel(key)] :
+                            this.selector[this.selectorPointer].dataset[G.toCamel(key)];
             } else {
 
-                if (!Array.isArray(this.selector)) {
-                    this.selector.dataset[G.toCamel(key)] = value;
-                } else {
+                !this.selectorIsArray ?
+                    this.selector.dataset[G.toCamel(key)] = value :
                     this.selector.forEach(function (item) {
                         item.dataset[G.toCamel(key)] = value;
                     })
-                }
             }
         },
 
@@ -158,19 +156,19 @@
             if (typeof property === 'string') {
 
                 if (arguments.length === 1) {
-                    if (!Array.isArray(this.selector)) {
-                        return window.getComputedStyle(this.selector, null)[property];
-                    } else {
-                        return window.getComputedStyle(this.selector[this.selectorPointer], null)[property];
-                    }
+
+                    return !this.selectorIsArray ?
+                                window.getComputedStyle(this.selector, null)[property] :
+                                window.getComputedStyle(this.selector[this.selectorPointer], null)[property];
+
                 } else {
-                    if (!Array.isArray(this.selector)) {
-                        this.selector.style.cssText += ';' + property + ':' + value;
-                    } else {
+
+                    !this.selectorIsArray ?
+                        this.selector.style.cssText += ';' + property + ':' + value :
                         this.selector.forEach(function (item) {
                             item.style.cssText += ';' + property + ':' + value;
                         });
-                    }
+
                 }
 
                 return this;
@@ -182,13 +180,12 @@
                 for (var key in property) {
                     cssText += ';' + key + ':' + property[key];
                 }
-                if (!Array.isArray(this.selector)) {
-                    this.selector.style.cssText += cssText;
-                } else {
+
+                !this.selectorIsArray ?
+                    this.selector.style.cssText += cssText :
                     this.selector.forEach(function (item) {
                         item.style.cssText += cssText;
                     });
-                }
 
                 return this;
             }
@@ -204,7 +201,7 @@
         },
 
         parent: function () {
-            if (!Array.isArray(this.selector)) {
+            if (!this.selectorIsArray) {
                 this.selector = this.selector.parentNode;
 
                 return this;
@@ -220,33 +217,32 @@
             }
         },
 
+        find: function () {
+
+        },
+
         text: function (value) {
             if (!value) {
 
-                if (!Array.isArray(this.selector)) {
-                    return this.selector.innerText;
-                } else {
-                    return this.selector[this.selectorPointer].innerText;
-                }
+                return !this.selectorIsArray ?
+                            this.selector.innerText :
+                            this.selector[this.selectorPointer].innerText;
 
             } else {
 
-                if (!Array.isArray(this.selector)) {
-                    this.selector.innerText = value;
-                } else {
+                !this.selectorIsArray ?
+                    this.selector.innerText = value :
                     this.selector[this.selectorPointer].innerText = value;
-                }
             }
         },
 
         remove: function () {
-            if (!Array.isArray(this.selector)) {
-                this.selector.parentNode.removeChild(this.selector);
-            } else {
+
+            !this.selectorIsArray ?
+                this.selector.parentNode.removeChild(this.selector) :
                 this.selector.forEach(function (item) {
                     item.parentNode.removeChild(item);
                 });
-            }
         },
 
         height: function () {
@@ -265,19 +261,15 @@
 
             if (!value) {
 
-                if (!Array.isArray(this.selector)) {
-                    return this.selector.innerHTML;
-                } else {
-                    return this.selector[this.selectorPointer].innerHTML;
-                }
+                return !this.selectorIsArray ?
+                            this.selector.innerHTML :
+                            this.selector[this.selectorPointer].innerHTML;
 
             } else {
 
-                if (!Array.isArray(this.selector)) {
-                    this.selector.innerHTML = value;
-                } else {
+                !this.selectorIsArray ?
+                    this.selector.innerHTML = value :
                     this.selector[this.selectorPointer].innerHTML = value;
-                }
             }
         },
 
@@ -296,16 +288,16 @@
             fullName = '',
             firstItem = true;
 
-        fullName = splitArray.map(function (item) {
+        fullName = splitArray.reduce(function (prev, curr) {
             if (firstItem) {
                 firstItem = false;
-                return item;
+                return prev + curr[0].toUpperCase() + curr.slice(1);
             } else {
-                return item[0].toUpperCase() + item.slice(1);
+                return prev + curr[0].toUpperCase() + curr.slice(1);
             }
         });
 
-        return fullName.join('');
+        return fullName;
 
     };
 
