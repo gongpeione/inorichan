@@ -7,12 +7,14 @@
 
     <!--<link rel="stylesheet" href="css/style.css">-->
 
-    <script src="js/main.js"></script>
+    <!--<script src="js/main.js"></script>-->
+
+    <script data-main="../tmp/main" src="../tmp/require.js"></script>
 
 </head>
 <body>
 
-<div id="a" data-aaa="aaabbb">
+<div id="a" class="bb cd"data-aaa="aaabbb">
     <div class="aa">
         <input type="text">
     </div>
@@ -27,7 +29,7 @@
 
     /*console.log(G('#a').attr('id', 'bb', 'cc'));
     console.log(G('#bb .aa'));*/
-    G('.da').on('click', function() {
+    /*G('.da').on('click', function() {
         console.log(this.className);
     });
     G('.aa').on('click', function() {
@@ -42,8 +44,15 @@
         'border'    : '10px solid #ccc'
     }));
 
-    G('.da').remove();
+    //G('.da').remove();
     console.log(G('.aa').data('aaa', 'ddlskafjlaksdfj'));
+
+    console.log(G('#a').hasClass('bdb'));
+
+    G('#a').addClass('bdb');
+    G('#a').addClass('bdb');*/
+
+
 </script>
 
 </body>

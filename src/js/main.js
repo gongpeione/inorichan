@@ -1,11 +1,32 @@
 /**
  * Created by Gong on 2016/4/1.
  */
-(function (document, window, undefined) {
+
+(function(global, factory) {
+
+    if ( typeof module === "object" && typeof module.exports === "object" ) {
+
+        module.exports = global.document ?
+            factory( global ) :
+            function( w ) {
+                if ( !w.document ) {
+                    throw new Error( "jQuery requires a window with a document" );
+                }
+                return factory( w );
+            };
+    } else {
+        factory( global );
+    }
+
+})(typeof window !== "undefined" ? window : this, function (window, undefined) {
+
+    var document = window.document;
 
     function G(value) {
         return new G.prototype.init(value);
     }
+
+    var version = '0.0.1';
 
     G.prototype = {
 
@@ -132,13 +153,13 @@
                 //IE10- does not support dataset
                 if(this.selector.dataset) {
                     return !this.selectorIsArray ?
-                                this.selector.dataset[G.toCamel(key)] :
-                                this.selector[this.selectorPointer].dataset[G.toCamel(key)];
+                        this.selector.dataset[G.toCamel(key)] :
+                        this.selector[this.selectorPointer].dataset[G.toCamel(key)];
                 } else {
 
                     return !this.selectorIsArray ?
-                                this.selector.getAttribute('data-' + key) :
-                                this.selector[this.selectorPointer].getAttribute('data-' + key);
+                        this.selector.getAttribute('data-' + key) :
+                        this.selector[this.selectorPointer].getAttribute('data-' + key);
 
                 }
             } else {
@@ -160,8 +181,40 @@
             }
         },
 
+        hasClass: function(value) {
+
+            if(!this.selectorIsArray) {
+                return !!(this.selector.className.indexOf(value) + 1);
+            } else {
+
+                this.selector.forEach(function(item) {
+                    if(this.selector.className.indexOf(value) + 1) {
+                        return true;
+                    }
+                });
+
+                return false;
+            }
+        },
+
         addClass: function (className) {
-            //TODO
+
+            if(!this.selectorIsArray) {
+                //if element does not have this class name;
+                if(!(this.selector.className.indexOf(className) + 1)) {
+                    this.selector.className += ' ' + className;
+                }
+
+            } else {
+
+                this.selector.forEach(function(item) {
+                    if(!(item.className.indexOf(className) + 1)) {
+                        item.className += ' ' + className;
+                    }
+                });
+            }
+
+            return this;
         },
 
         rmClass: function (className) {
@@ -175,8 +228,8 @@
                 if (arguments.length === 1) {
 
                     return !this.selectorIsArray ?
-                                window.getComputedStyle(this.selector, null)[property] :
-                                window.getComputedStyle(this.selector[this.selectorPointer], null)[property];
+                        window.getComputedStyle(this.selector, null)[property] :
+                        window.getComputedStyle(this.selector[this.selectorPointer], null)[property];
 
                 } else {
 
@@ -242,8 +295,8 @@
             if (!value) {
 
                 return !this.selectorIsArray ?
-                            this.selector.innerText :
-                            this.selector[this.selectorPointer].innerText;
+                    this.selector.innerText :
+                    this.selector[this.selectorPointer].innerText;
 
             } else {
 
@@ -279,8 +332,8 @@
             if (!value) {
 
                 return !this.selectorIsArray ?
-                            this.selector.innerHTML :
-                            this.selector[this.selectorPointer].innerHTML;
+                    this.selector.innerHTML :
+                    this.selector[this.selectorPointer].innerHTML;
 
             } else {
 
@@ -318,6 +371,14 @@
 
     };
 
+    G.script = function (url) {
+
+    };
+
+    G.ajax = function (param) {
+
+    };
+
     //Reset Function i's enumerable
     if (Object.defineProperty) {
         Object.defineProperty(G, 'constructor', {
@@ -329,4 +390,6 @@
     G.prototype.init.prototype = G.prototype;
     window.G = G;
 
-})(document, window);
+    return G;
+
+})
