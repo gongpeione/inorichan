@@ -129,17 +129,34 @@
         data: function (key, value) {
 
             if (arguments.length === 1) {
+                //IE10- does not support dataset
+                if(this.selector.dataset) {
+                    return !this.selectorIsArray ?
+                                this.selector.dataset[G.toCamel(key)] :
+                                this.selector[this.selectorPointer].dataset[G.toCamel(key)];
+                } else {
 
-                return !this.selectorIsArray ?
-                            this.selector.dataset[G.toCamel(key)] :
-                            this.selector[this.selectorPointer].dataset[G.toCamel(key)];
+                    return !this.selectorIsArray ?
+                                this.selector.getAttribute('data-' + key) :
+                                this.selector[this.selectorPointer].getAttribute('data-' + key);
+
+                }
             } else {
 
-                !this.selectorIsArray ?
-                    this.selector.dataset[G.toCamel(key)] = value :
-                    this.selector.forEach(function (item) {
-                        item.dataset[G.toCamel(key)] = value;
-                    })
+                if(this.selector.dataset) {
+                    !this.selectorIsArray ?
+                        this.selector.dataset[G.toCamel(key)] = value :
+                        this.selector.forEach(function (item) {
+                            item.dataset[G.toCamel(key)] = value;
+                        });
+                } else {
+                    !this.selectorIsArray ?
+                        this.selector.setAttribute('data-' + key, value) :
+                        this.selector.forEach(function (item) {
+                            item.setAttribute('data-' + key, value);
+                        });
+                }
+
             }
         },
 
