@@ -69,6 +69,8 @@
 
             if (typeof value === 'string') {
 
+                value = value.trim();
+
                 this.selectorVal = value;
 
                 var valueArray = value.split(' ');
@@ -218,7 +220,18 @@
         },
 
         rmClass: function (className) {
-            //TODO
+            if(!this.selectorIsArray) {
+
+                this.selector.className.replace(className, '');
+
+            } else {
+
+                this.selector.forEach(function(item) {
+                    item.className.replace(className, '');
+                });
+            }
+
+            return this;
         },
 
         css: function (property, value) {
@@ -368,10 +381,6 @@
         });
 
         return fullName;
-
-    };
-
-    G.script = function (url) {
 
     };
 
